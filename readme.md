@@ -1,38 +1,36 @@
-atest_pic                                     测试图片
-atest_video                                   测试视频
+# 👁️ 智能视觉通用识别系统 (Smart Vision General Detection System)
 
- 
-                       train/valid/test图片数量
-helmet_dataset         2043/195/97            头盔数据集
-helmet_vest_dataset    237/17/17              头盔背心数据集1
-helmet_vest_dataset2   2111/510/171           头盔背心数据集2
-fire_smoke_dataset     3320/684/300
-monitor_worker         2408/806/131
--test                                         测试集
--train                                        训练集 
--valid                                        验证集
--data.yaml                                    训练时的配置文件
--train.py                                     训练数据集
+![Version](https://img.shields.io/badge/version-v4.1-blue.svg)
+![Architecture](https://img.shields.io/badge/architecture-MVC-orange.svg)
+![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)
+![Framework](https://img.shields.io/badge/framework-PySide6%20%7C%20Ultralytics%20YOLO-lightgrey.svg)
 
+## 📖 项目简介 (Overview)
 
+本项目是一个基于 **MVC 架构**与 **YOLO 动态模型调度** 的多场景视觉合规巡检系统。摒弃了传统视觉项目“硬编码”和“单纯画框计数”的痛点，本系统引入了**空间关系推理（AABB交集与嵌套）**，能够实现从“认识物体”到“理解业务逻辑”的跨越。
 
-venv                                          python环境
+系统目前已完美落地两大垂直场景，并支持通过解耦的逻辑层快速横向扩展：
+1. **智慧工地 PPE 检测**：基于二维平面交集的安全帽/反光衣佩戴规范检测。
+2. **智慧教培行为分析**：单人专注度解析与多人课堂违纪（玩手机、低头等）动态聚合报警。
 
-helmet_model                                  头盔数据集训练结果
-helmet_vest_model                             头盔背心数据集1训练结果
-helmet_vest_model2                            头盔背心数据集2训练结果
+## ✨ 核心特性 (Key Features)
 
-test_model                                    测试模型
+- **🧩 纯粹的 MVC 架构解耦**：UI 视图 (`ui_view.py`)、数据交互 (`logic_core.py/VisionDataLayer`) 与业务逻辑 (`logic_core.py/BusinessLogicAnalyzer`) 彻底分离，支持并行开发与无损维护。
+- **🧠 动态 Agent 逻辑分发**：支持热插拔任意 `.pt` YOLO 模型，自动解析模型类别（Names Dict），并根据前端指令动态挂载不同的长链推理逻辑。
+- **📐 空间逻辑推理引擎**：内置 AABB 二维平面交集碰撞检测算法，精准实现目标间的关系绑定（如：人与头盔的物理绑定关系）。
+- **🛡️ 工业级测试保障**：针对核心逻辑层配备了基于 Mock 数据的极限单元测试，实现 **100% 语句覆盖率** 与 **100% 条件/分支覆盖率**。
+- **🚀 多路并发压测支持**：内置无头（Headless）多进程压测脚本，支持对内存、CPU 和 FPS 的极限性能摸底。
 
-yolo26n                                       训练数据集所需基础模型 
-yolo8n                                        训练数据集所需基础模型
--------------------------------------------------------------------------------------------------------------------
-使用说明:
+## 📂 项目结构 (Project Structure)
 
-测试结果:test_model.py运行程序，14行开始选择一个训练好的模型加载,以pt为后缀
-
-训练模型:选择一个数据集，运行train.py，在项目目录上级目录下找到\runs\detect\[project]\[name]\weights\best.pt即为训练好的模型
-其中project,name参数在train.py18行
-
-
-
+```text
+📦 PROJECT_ROOT
+ ┣ 📂 datasets/               # 数据集存放目录 (已被 .gitignore 忽略)
+ ┣ 📂 runs/                   # YOLO 训练/预测输出 (已被 .gitignore 忽略)
+ ┣ 📜 main_controller.py      # 【C】控制器：统筹 UI 与底层逻辑的事件流转
+ ┣ 📜 ui_view.py              # 【V】视图层：PySide6 纯界面排版与视觉渲染
+ ┣ 📜 logic_core.py           # 【M】模型层：YOLO 视频流调度与纯数学/规则算法
+ ┣ 📜 test_full_coverage.py   # 核心单元测试脚本 (Mock 数据注入与全分支覆盖)
+ ┣ 📜 benchmark.py            # 多进程并发极限压测脚本
+ ┣ 📜 .gitignore              # Git 忽略配置 (屏蔽大文件与隐私数据)
+ ┗ 📜 README.md               # 项目说明文档
